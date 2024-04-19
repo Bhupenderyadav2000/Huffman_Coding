@@ -137,7 +137,7 @@ class HuffmanCoding:
 
     ### Decompression of compressed file
 
-    def removePadding(self,text):
+    def __removePadding(self,text):
         padded_info = text[:8]
         extra_padding = int(padded_info,2)
 
@@ -158,7 +158,7 @@ class HuffmanCoding:
                 current_bits = ""
         return decoded_text
 
-    def decompressed(self,input_path):
+    def decompress(self,input_path):
         file_name,file_extension = os.path.splitext(self.path)
         output_path = file_name + "_decompressed" + ".txt"
 
@@ -179,5 +179,5 @@ class HuffmanCoding:
 path = '/Users/parvin.../Desktop/coding ninja/pyhton/Huffman Coding project/sample.txt'
 h = HuffmanCoding(path)
 output_path = h.compress()
-
+h.decompress(output_path)
 
