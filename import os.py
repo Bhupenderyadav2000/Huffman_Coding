@@ -129,7 +129,8 @@ class HuffmanCoding:
         print('Compressed')
         return output_path
 
-path = '/Users/parvin.../Desktop/sample.txt'
+path = '/Users/parvin.../Desktop/coding ninja/pyhton/Huffman Coding project/sample.txt'
 h = HuffmanCoding(path)
 output_path = h.compress()
+
 
