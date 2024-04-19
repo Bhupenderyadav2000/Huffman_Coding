@@ -22,6 +22,7 @@ class HuffmanCoding:
         self.path = path
         self.__heap = []
         self.__codes = {}
+        self.__reverseCodes = {}
 
     def __make_frequency_dict(self,text):
         freq_dict = {}
@@ -55,8 +56,11 @@ class HuffmanCoding:
 
         if root is None:
             return 
+        
         if root.value is not None:
             self.__codes[root.value] = curr_bits
+            self.__reverseCodes[curr_bits] = root.value
+
             return
             
         self.__buildCodesHelper(root.left,curr_bits + "0")
@@ -128,6 +132,49 @@ class HuffmanCoding:
             output.write(final_bytes)
         print('Compressed')
         return output_path
+    
+
+
+    ### Decompression of compressed file
+
+    def removePadding(self,text):
+        padded_info = text[:8]
+        extra_padding = int(padded_info,2)
+
+        text = text[8:]
+        text_after_padding_removed = text[:-1*extra_padding]  ## here -1 used bcs if 3 is extra padding -1 * 3 = -3 which means it goes untill last 3 digits
+        return text_after_padding_removed
+    
+    def __decodeText(self,text):
+
+        decoded_text = ""
+        current_bits = ""
+
+        for bit in text:
+            current_bits += bit
+            if current_bits in self.__reverseCodes:
+                character = self.__reverseCodes[current_bits]
+                decoded_text += character
+                current_bits = ""
+        return decoded_text
+
+    def decompressed(self,input_path):
+        file_name,file_extension = os.path.splitext(self.path)
+        output_path = file_name + "_decompressed" + ".txt"
+
+        with open(input_path, 'rb') as file, open(output_path, 'w') as output:
+            bit_string = ""
+            byte = file.read(1)
+            while byte:
+                byte = ord(byte)
+                bits = bin(byte)[2:].rjust(8,'0')
+                bit_string += bits
+                byte = file.read(1)
+            
+            actual_text = self.__removePadding(bit_string)
+            decompressed_text = self.__decodeText(actual_text)
+            output.write(decompressed_text)
+        return
 
 path = '/Users/parvin.../Desktop/coding ninja/pyhton/Huffman Coding project/sample.txt'
 h = HuffmanCoding(path)
